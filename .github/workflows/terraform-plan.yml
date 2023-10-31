@@ -1,4 +1,4 @@
-name: 'Terraform Apply'
+name: 'Terraform Plan'
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   terraform:
-    name: 'Terraform Apply'
+    name: 'Terraform Plan'
     runs-on: ubuntu-latest
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
