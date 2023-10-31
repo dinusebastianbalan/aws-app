@@ -1,14 +1,15 @@
 from flask import Flask, request, jsonify
 from datetime import date
 import psycopg2
+import os
 
 app = Flask(__name__)
 
 # Database connection parameters
-db_endpoint = 'myrdsinstance.cczeocclwg0h.us-east-1.rds.amazonaws.com'
-db_name = 'store'
-db_user = 'postgres'
-db_password = 'myrdspassword'
+db_endpoint = os.environ["db_endpoint"]
+db_name = os.environ["db_name"]
+db_user = os.environ["db_user"]
+db_password = os.environ["db_password"]
 
 # Function to establish a database connection
 def connect_to_db():
@@ -74,7 +75,7 @@ def get_user_by_id(user_id):
             cursor = connection.cursor()
             cursor.execute("SELECT id, name, dob FROM users WHERE id = %s;", (user_id,))
             user_data = cursor.fetchone()
-            
+
             if user_data:
                 user_id, name, dob = user_data
                 user_info = {
@@ -106,7 +107,7 @@ def calculate_user_age(user_id):
                 if current_date > birthday:
                     return (current_date-birthday).days
                 else:
-                    return "NEM"                
+                    return "NEM"
             if user_data:
                 user_id, name, dob = user_data
                 current_date = date.today()
