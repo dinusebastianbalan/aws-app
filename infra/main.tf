@@ -171,3 +171,8 @@ resource "aws_db_instance" "myinstance" {
   skip_final_snapshot  = true
   publicly_accessible =  false
 }
+
+module "ecr" {
+  source  = "terraform-aws-modules/ecr/aws"
+  version = "1.6.0"
+}
