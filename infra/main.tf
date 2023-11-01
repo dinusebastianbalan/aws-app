@@ -182,5 +182,5 @@ module "eks" {
   cluster_version = "1.28"
 
   subnet_ids = module.vpc.private_subnets
-  cluster_security_group_id = ["${aws_security_group.rds_sg.id}"]
+  cluster_security_group_id = aws_security_group.rds_sg.id
 }
