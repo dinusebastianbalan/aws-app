@@ -23,10 +23,7 @@ jobs:
 
     - name: Build the Docker image
     - uses: actions/checkout@v3
-      run: |
-        export DOCKER_IMAGE_TAG=$(date +%s)
-        cd app
-        docker build . --file Dockerfile --tag my-birthday-app:$DOCKER_IMAGE_TAG
+      run: export DOCKER_IMAGE_TAG=$(date +%s); cd app; docker build . --file Dockerfile --tag my-birthday-app:$DOCKER_IMAGE_TAG
 
     - name: Tag Docker image
       run: docker tag my-birthday-app-dev:$DOCKER_IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$DOCKER_IMAGE_TAG
