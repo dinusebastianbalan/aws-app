@@ -66,7 +66,7 @@ def save_update_user():
     else:
         return jsonify({'error': 'Failed to connect to the database'}), 500
 
-# New route to get user information by user_id
+# New route to get user information by user_id 
 @app.route('/api/user/<int:user_id>', methods=['GET'])
 def get_user_by_id(user_id):
     connection = connect_to_db()
