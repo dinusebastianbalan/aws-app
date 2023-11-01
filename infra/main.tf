@@ -179,7 +179,7 @@ resource "aws_ecr_repository" "my_ecr" {
 module "eks" {
   source      = "terraform-aws-modules/eks/aws"
   cluster_name = var.cluster_name
-  cluster_version = "1.21"
+  cluster_version = "1.28"
 
   subnet_ids = module.vpc.private_subnets
 }
