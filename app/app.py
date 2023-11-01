@@ -5,7 +5,7 @@ import os
 
 app = Flask(__name__)
 
-# Database connection parameters
+# Database connection parameters 
 db_endpoint = os.environ["db_endpoint"]
 db_name = os.environ["db_name"]
 db_user = os.environ["db_user"]
