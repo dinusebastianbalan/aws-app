@@ -24,13 +24,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Build the Docker image
+    - name: Build/tag the Docker image and push to ECR
       run: |
         export DOCKER_IMAGE_TAG=$(date +%s)
         cd app; docker build . --file Dockerfile --tag my-birthday-app:$DOCKER_IMAGE_TAG
-
-    - name: Tag Docker image
-      run: docker tag my-birthday-app-dev:$DOCKER_IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$DOCKER_IMAGE_TAG
-
-    - name: Push Docker image to ECR
-      run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$(DOCKER_IMAGE_TAG
+        docker tag my-birthday-app-dev:$DOCKER_IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$DOCKER_IMAGE_TAG
+        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$(DOCKER_IMAGE_TAG
