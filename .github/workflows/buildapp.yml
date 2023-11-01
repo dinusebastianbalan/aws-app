@@ -23,12 +23,11 @@ jobs:
         export DOCKER_IMAGE_TAG=$(date +%s)
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
 
-    - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: cd app; docker build . --file Dockerfile --tag my-birthday-app:$(DOCKER_IMAGE_TAG)
+      run: cd app; docker build . --file Dockerfile --tag my-birthday-app:$DOCKER_IMAGE_TAG
 
     - name: Tag Docker image
-      run: docker tag my-birthday-app-dev:$(DOCKER_IMAGE_TAG) ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$DOCKER_IMAGE_TAG
+      run: docker tag my-birthday-app-dev:$DOCKER_IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$DOCKER_IMAGE_TAG
 
-    - name: Tag Docker image
-      run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$(DOCKER_IMAGE_TAG)
+    - name: Push Docker image to ECR
+      run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$DOCKER_IMAGE_TAG
