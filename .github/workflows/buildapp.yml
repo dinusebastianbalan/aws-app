@@ -28,5 +28,5 @@ jobs:
       run: |
         export DOCKER_IMAGE_TAG=$(date +%s)
         cd app; docker build . --file Dockerfile
-        docker tag my-birthday-app:$DOCKER_IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$DOCKER_IMAGE_TAG
+        docker tag my-birthday-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$DOCKER_IMAGE_TAG
         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev:$DOCKER_IMAGE_TAG
