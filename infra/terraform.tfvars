@@ -24,3 +24,5 @@ instance_keypair = "aws-terraform-key"
 
 
 password         = "Parola123!"
+
+cluster_name = "testcluster"

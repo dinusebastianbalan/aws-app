@@ -175,3 +175,11 @@ resource "aws_db_instance" "myinstance" {
 resource "aws_ecr_repository" "my_ecr" {
   name = "my-birthday-app-dev"  
 }
+
+module "eks" {
+  source      = "terraform-aws-modules/eks/aws"
+  cluster_name = var.cluster_name
+  cluster_version = "1.21"
+
+  subnet_ids = module.vpc.private_subnets
+}
