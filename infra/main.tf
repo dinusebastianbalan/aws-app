@@ -172,8 +172,6 @@ resource "aws_db_instance" "myinstance" {
   publicly_accessible =  false
 }
 
-module "ecr" {
-  source  = "terraform-aws-modules/ecr/aws"
-  repository_name = "birthdayappdev"
-  version = "1.6.0"
+resource "aws_ecr_repository" "my_ecr" {
+  name = "my-birthday-app-dev"  
 }
