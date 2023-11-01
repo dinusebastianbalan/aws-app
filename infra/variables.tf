@@ -109,3 +109,9 @@ variable "password" {
   type        = string
   default     = ""
 }
+
+variable "cluster_name" {
+  description = "EKS cluster name"
+  type        = string
+  default     = ""
+}
