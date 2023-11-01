@@ -3,9 +3,8 @@ name: 'Terraform Apply'
 on:
  push:
    branches: [ "main" ]
-
-permissions:
-  contents: read
+   paths:
+    - 'infra/**'
 
 jobs:
   terraform:
@@ -25,7 +24,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
         minimum-approvals: 1
-        
+
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3

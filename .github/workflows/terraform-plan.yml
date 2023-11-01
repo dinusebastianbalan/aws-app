@@ -3,9 +3,8 @@ name: 'Terraform Plan'
 on:
   pull_request:
     branches: [ "main" ]
-
-permissions:
-  contents: read
+   paths:
+    - 'infra/**'
 
 jobs:
   terraform:
