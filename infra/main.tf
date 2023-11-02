@@ -203,7 +203,7 @@ module "eks_managed_node_group" {
   desired_size = 1
 
   instance_types = ["t3.small"]
-  capacity_type  = "on-demand"
+  capacity_type  = "ON_DEMAND"
 
   labels = {
     Environment = "test"
