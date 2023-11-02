@@ -202,8 +202,8 @@ module "eks_managed_node_group" {
   max_size     = 10
   desired_size = 1
 
-  instance_types = ["t3.micro"]
-  capacity_type  = "SPOT"
+  instance_types = ["t3.small"]
+  capacity_type  = "on-demand"
 
   labels = {
     Environment = "test"
