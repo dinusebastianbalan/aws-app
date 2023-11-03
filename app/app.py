@@ -24,6 +24,29 @@ def connect_to_db():
     except Exception as error:
         return None
 
+# SQL statement to create the "users" table
+create_table_sql = """
+CREATE TABLE IF NOT EXISTS users (
+    id serial PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    dob DATE
+);
+"""
+
+# Connect to the PostgreSQL database
+try:
+    connection = connect_to_db()
+    cursor = connection.cursor()
+
+    # Create the "users" table
+    cursor.execute(create_table_sql)
+    connection.commit()
+    print("Table 'users' created successfully.")
+
+except (Exception, psycopg2.Error) as error:
+    print(f"Error: {error}")
+
+
 # API to save/update user's name and date of birth
 @app.route('/api/user', methods=['POST', 'PUT'])
 def save_update_user():
