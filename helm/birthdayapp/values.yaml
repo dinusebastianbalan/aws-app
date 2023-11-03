@@ -8,7 +8,7 @@ selector:
     service: "birthdayapp"
 image:
   registry: "075948657693.dkr.ecr.us-east-1.amazonaws.com"
-  repository: "my-birthday-app-dev"
+  repository: "075948657693.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev"
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "v0.0.1"

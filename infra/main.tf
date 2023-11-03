@@ -137,6 +137,35 @@ resource "aws_security_group" "rds_sg" {
   }
 }
 
+
+## DB
+
+resource "random_password" "password" {
+  length           = 10
+  upper = true
+  min_upper = 2
+  lower = true
+  min_lower = 2
+  number = true
+  min_numeric = 2
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"  # Avoid characters that cause globbing problems
+}
+
+#
+# Define a secret for the master password
+#
+resource "aws_secretsmanager_secret" "db_password" {
+  name                    = "db_password-secret"
+  description             = "Master db_password for DB"
+  recovery_window_in_days = 0 # this is necessary so tf cleanly removes secret
+}
+
+resource "aws_secretsmanager_secret_version" "secret_val" {
+  secret_id     = aws_secretsmanager_secret.db_password.id
+  secret_string = random_password.password.result
+}
+
 resource "aws_db_subnet_group" "default" {
   name       = "main"
   subnet_ids = [module.vpc.public_subnets[0],module.vpc.public_subnets[1],module.vpc.public_subnets[2]]
@@ -165,7 +194,7 @@ resource "aws_db_instance" "myinstance" {
   db_name              = "store"
   db_subnet_group_name = aws_db_subnet_group.default.name
   username             = "postgres"
-  password             = "myrdspassword"
+  password             = random_password.password.result
   parameter_group_name = aws_db_parameter_group.example.name
   vpc_security_group_ids = ["${aws_security_group.rds_sg.id}"]
   skip_final_snapshot  = true
