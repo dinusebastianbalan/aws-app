@@ -143,13 +143,10 @@ resource "aws_security_group" "rds_sg" {
 resource "random_password" "password" {
   length           = 10
   upper = true
-  min_upper = 2
+  min_upper = 5
   lower = true
-  min_lower = 2
-  number = true
-  min_numeric = 2
-  special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"  # Avoid characters that cause globbing problems
+  min_lower = 5
+  special          = false
 }
 
 #
