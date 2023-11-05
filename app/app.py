@@ -46,6 +46,9 @@ try:
 except (Exception, psycopg2.Error) as error:
     print(f"Error: {error}")
 
+@app.route('/ready', methods=['GET'])
+def liveness():
+    return "OK", 200
 
 # API to save/update user's name and date of birth
 @app.route('/api/user', methods=['POST', 'PUT'])
