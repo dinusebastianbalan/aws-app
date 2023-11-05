@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: nginx-deployment-sa
+      serviceAccountName: nginx-deployment-sas
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -43,7 +43,10 @@ spec:
           #   - -c
           env:
             - name: db_password
-              value: "$(secrets)"
+              valueFrom:
+                secretKeyRef:
+                  name: foosecret
+                  key: db_password
             - name: db_endpoint
               value: "{{ .Values.db_endpoint }}"
             - name: db_name

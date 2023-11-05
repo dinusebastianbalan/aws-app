@@ -111,7 +111,7 @@ module "ec2_bastion_instance" {
 # https://registry.terraform.io/providers/hashicorp/aws/2.42.0/docs/resources/eip
 resource "aws_eip" "bastion_instance_eip" {
   #   vpc      = true
-  domain   = "vpc"      # vpc argument to the aws_eip resource is deprecated
+  domain   = "vpc" # vpc argument to the aws_eip resource is deprecated
   instance = module.ec2_bastion_instance.id
   tags     = local.tags
   depends_on = [
@@ -121,12 +121,12 @@ resource "aws_eip" "bastion_instance_eip" {
 }
 
 resource "aws_security_group" "rds_sg" {
-  name = "rds_sg"
-  vpc_id      = module.vpc.vpc_id 
+  name   = "rds_sg"
+  vpc_id = module.vpc.vpc_id
   ingress {
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
@@ -139,15 +139,15 @@ resource "aws_security_group" "rds_sg" {
 
 
 ## DB
-
 resource "random_password" "password" {
-  length           = 10
-  upper = true
+  length    = 10
+  upper     = true
   min_upper = 5
-  lower = true
+  lower     = true
   min_lower = 5
-  special          = false
+  special   = false
 }
+
 
 #
 # Define a secret for the master password
@@ -159,13 +159,15 @@ resource "aws_secretsmanager_secret" "db_password" {
 }
 
 resource "aws_secretsmanager_secret_version" "secret_val" {
-  secret_id     = aws_secretsmanager_secret.db_password.id
-  secret_string = random_password.password.result
+  secret_id = aws_secretsmanager_secret.db_password.id
+  # TODO: Figure out a way to generate mapping structure that presents this
+  #       key/value pair structure in a more readable way. Maybe use template files?
+  secret_string = jsonencode({ "password" : "${random_password.password.result}" })
 }
 
 resource "aws_db_subnet_group" "default" {
   name       = "main"
-  subnet_ids = [module.vpc.public_subnets[0],module.vpc.public_subnets[1],module.vpc.public_subnets[2]]
+  subnet_ids = [module.vpc.public_subnets[0], module.vpc.public_subnets[1], module.vpc.public_subnets[2]]
 }
 
 resource "aws_db_parameter_group" "example" {
@@ -183,32 +185,32 @@ resource "aws_db_parameter_group" "example" {
 }
 
 resource "aws_db_instance" "myinstance" {
-  engine               = "postgres"
-  identifier           = "myrdsinstance"
-  allocated_storage    =  20
-  engine_version       = "15.3"
-  instance_class       = "db.t3.micro"
-  db_name              = "store"
-  db_subnet_group_name = aws_db_subnet_group.default.name
-  username             = "postgres"
-  password             = random_password.password.result
-  parameter_group_name = aws_db_parameter_group.example.name
+  engine                 = "postgres"
+  identifier             = "myrdsinstance"
+  allocated_storage      = 20
+  engine_version         = "15.3"
+  instance_class         = "db.t3.micro"
+  db_name                = "store"
+  db_subnet_group_name   = aws_db_subnet_group.default.name
+  username               = "postgres"
+  password               = random_password.password.result
+  parameter_group_name   = aws_db_parameter_group.example.name
   vpc_security_group_ids = ["${aws_security_group.rds_sg.id}"]
-  skip_final_snapshot  = true
-  publicly_accessible =  false
+  skip_final_snapshot    = true
+  publicly_accessible    = false
 }
 
 resource "aws_ecr_repository" "my_ecr" {
-  name = "my-birthday-app-dev"  
+  name = "my-birthday-app-dev"
 }
 
 module "eks" {
-  source      = "terraform-aws-modules/eks/aws"
-  cluster_name = var.cluster_name
+  source          = "terraform-aws-modules/eks/aws"
+  cluster_name    = var.cluster_name
   cluster_version = "1.28"
 
-  subnet_ids = module.vpc.private_subnets
-  vpc_id =  module.vpc.vpc_id
+  subnet_ids                     = module.vpc.private_subnets
+  vpc_id                         = module.vpc.vpc_id
   cluster_endpoint_public_access = true
 }
 

@@ -15,15 +15,10 @@ spec:
       labels:
         app: nginx
     spec:
-      serviceAccountName: nginx-deployment-sa
+      serviceAccountName: nginx-deployment-sas
       containers:
       - name: nginx-deployment
         image: nginx
-        args:
-          - export secrets=$(cat /mnt/secrets/db_password-secret)
-        command:
-          - sh
-          - -c
         ports:
         - containerPort: 80
         volumeMounts:
