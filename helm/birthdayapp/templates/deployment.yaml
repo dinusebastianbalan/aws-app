@@ -41,7 +41,7 @@ spec:
           # command:
           #   - sh
           #   - -c
-        env:
+          env:
             - name: db_password
               valueFrom:
                 secretKeyRef:
@@ -81,7 +81,7 @@ spec:
           driver: secrets-store.csi.k8s.io
           readOnly: true
           volumeAttributes:
-            secretProviderClass: nginx-deployment-spc
+            secretProviderClass: nginx-deployment-spc-k8s-secrets
       #   {{- toYaml . | nindent 8 }}
       # {{- end }}
       # {{- with .Values.nodeSelector }}

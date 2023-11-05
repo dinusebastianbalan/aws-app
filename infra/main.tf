@@ -162,7 +162,7 @@ resource "aws_secretsmanager_secret_version" "secret_val" {
   secret_id = aws_secretsmanager_secret.db_password.id
   # TODO: Figure out a way to generate mapping structure that presents this
   #       key/value pair structure in a more readable way. Maybe use template files?
-  secret_string = jsonencode({ "password" : "${random_password.password.result}" })
+  secret_string = jsonencode({ "username":"foo", "password" : "${random_password.password.result}" })
 }
 
 resource "aws_db_subnet_group" "default" {

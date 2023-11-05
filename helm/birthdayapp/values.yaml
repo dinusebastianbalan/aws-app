@@ -11,7 +11,7 @@ image:
   repository: "075948657693.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev"
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v0.0.2"
+  tag: "v0.0.1"
 
 imagePullSecrets: []
 nameOverride: ""
