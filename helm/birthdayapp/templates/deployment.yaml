@@ -41,12 +41,12 @@ spec:
           # command:
           #   - sh
           #   - -c
-          env:
+        env:
             - name: db_password
               valueFrom:
                 secretKeyRef:
-                  name: foosecret
-                  key: db_password
+                  name: my-secret-01
+                  key: db_username_01
             - name: db_endpoint
               value: "{{ .Values.db_endpoint }}"
             - name: db_name
