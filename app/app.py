@@ -5,6 +5,18 @@ import os
 
 app = Flask(__name__)
 
+# Specify the file from which you want to read the value
+file_path = '/mnt/secrets/db_password-secret'
+
+# Check if the file exists
+if os.path.exists(file_path):
+    with open(file_path, 'r') as file:
+        # Read the content of the file
+        variable_value = file.read().strip()
+
+        # Set the environment variable
+        os.environ['db_password'] = variable_value
+
 # Database connection parameters
 db_endpoint = os.environ["db_endpoint"]
 db_name = os.environ["db_name"]

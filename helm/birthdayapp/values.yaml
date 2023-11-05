@@ -17,7 +17,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-
+db_endpoint: "myrdsinstance.cczeocclwg0h.us-east-1.rds.amazonaws.com"
+db_name: "store"
+db_user: "postgres"
 
 
 serviceAccount:
