@@ -8,8 +8,8 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: app
       protocol: TCP
-      name: http
+      name: app
   selector:
     {{- include "birthdayapp.selectorLabels" . | nindent 4 }}

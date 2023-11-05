@@ -36,11 +36,6 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          # args:
-          #   - while true; do echo -en '\n'; cat /mnt/secrets/db_password-secret=$secrets'\n';sleep 30; done;
-          # command:
-          #   - sh
-          #   - -c
           env:
             - name: db_password
               valueFrom:  
@@ -59,17 +54,17 @@ spec:
             - name: db_user
               value: "{{ .Values.db_user }}" 
           ports:
-            - name: http
+            - name: app
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: app
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: app
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}

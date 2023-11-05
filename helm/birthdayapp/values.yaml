@@ -11,7 +11,7 @@ image:
   repository: "075948657693.dkr.ecr.us-east-1.amazonaws.com/my-birthday-app-dev"
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v0.0.1"
+  tag: "v0.0.2"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -49,7 +49,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 5000
 
 ingress:
   enabled: false
