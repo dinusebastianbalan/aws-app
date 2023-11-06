@@ -1,21 +1,41 @@
-name: 'Helm Deploy'
+name: 'Helm deploy'
 
 on:
-  push:
+  pull_request:
     branches: [ "main" ]
     paths:
-    - 'helm/**'
+    - 'infra/**'
   workflow_dispatch:
 
 jobs:
-  helm_upgrade_dev:
-    runs-on: 'ubuntu-latest'
+  terraform:
+    name: 'Helm deploy'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
     steps:
-      - uses: actions/checkout@v1
-      - name: Helm deploy
-        uses: wahyd4/kubectl-helm-action@master
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        with:
-          args: |
-            helm upgrade --install gateway -n gateway ingress-nginx/ingress-nginx
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Download Kubectl
+      run: curl -LO https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl
+
+    - name: Install Kubectl
+      run: sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    - name: Verify Kubectl
+      run: kubectl version --client
+
+    - name: Get context
+      run: aws eks update-kubeconfig --region us-east-1 --name testcluster
+
+    - name: Get namespaces
+      run: kubectl get namespace
