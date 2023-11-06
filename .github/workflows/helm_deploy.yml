@@ -35,8 +35,8 @@ jobs:
         chmod 700 get_helm.sh
         ./get_helm.sh
         helm version
-        helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
-        helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver  --set syncSecret.enabled=true --set enableSecretRotation=true
+#        helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+#        helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver  --set syncSecret.enabled=true --set enableSecretRotation=true
 
 
     # - name: Kubectl install ascp
