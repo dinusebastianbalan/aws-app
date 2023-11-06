@@ -8,32 +8,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  helm_deploy:
-    name: 'Helm upgrade'
-    runs-on: ubuntu-latest
-
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-    defaults:
-      run:
-        shell: bash
-
-
-    steps:
-    - uses: actions/checkout@v1
-    - name: upgrade micrservices on DEV
-      uses: wahyd4/kubectl-helm-action@master
-
-
-name: 'Helm Deploy'
-
-on:
-  push:
-    branches: [ "main" ]
-    paths:
-    - 'helm/**'
-  workflow_dispatch:
-
-jobs:
   helm_upgrade_dev:
     runs-on: 'ubuntu-latest'
     steps:
