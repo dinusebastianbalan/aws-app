@@ -75,33 +75,25 @@ resource "helm_release" "csi-secrets-store" {
 
 resource "null_resource" "kubectl_aosc" {
   provisioner "local-exec" {
-    command = "kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml"
+    command = "kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml --kubeconfig ./kubeconfig-${var.cluster_name}"
     interpreter = ["/bin/bash", "-c"]
-    }
+ }
 }
 
 resource "aws_iam_policy" "policy" {
   name        = "Secret_DB-policy"
   description = "SecretARN Policy"
 
-  policy = <<EOT
-{
-    "Version": "2012-10-17",
-    "Statement": [ {
-        "Effect": "Allow",
-        "Action": ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"],
-        "Resource": ["${var.secret_arn}" ]
-    } ]
-}
-EOT
-}
-
-data "tls_certificate" "example" {
-  url = data.aws_eks_cluster.default.identity[0].oidc[0].issuer
-}
-
-resource "aws_iam_openid_connect_provider" "example" {
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.example.certificates[0].sha1_fingerprint]
-  url             = data.aws_eks_cluster.default.identity[0].oidc[0].issuer
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
+        Effect   = "Allow"
+        Resource = ["${var.secret_arn}" ]
+      },
+    ]
+  })
 }
