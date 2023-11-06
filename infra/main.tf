@@ -291,24 +291,6 @@ resource "local_file" "kubeconfig" {
   filename = "./kubeconfig-${var.cluster_name}"
 }
 
-resource "kubernetes_namespace" "gateway" {
-  metadata {
-    name = "gateway"
-  }
-}
-
-resource "helm_release" "nginx_ingress" {
-  namespace = kubernetes_namespace.gateway.metadata.0.name
-  wait      = true
-  timeout   = 600
-
-  name = "gateway"
-
-  repository = "https://kubernetes.github.io/ingress-nginx"
-  chart      = "ingress-nginx"
-  version    = "v4.3.0"
-}
-
 resource "aws_iam_policy" "policy" {
   name        = "Secret_DB-policy"
   description = "SecretARN Policy"
