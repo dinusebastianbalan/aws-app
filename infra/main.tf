@@ -249,14 +249,6 @@ module "eks_managed_node_group" {
   }
 }
 
-# module "eks_config" {
-#   source          = "./kubernetes-config"
-#   cluster_name    = var.cluster_name
-#   secret_arn      = aws_secretsmanager_secret.db_password.arn  
-# }
-
-
-
 
 data "aws_eks_cluster" "default" {
   name = module.eks.cluster_name
@@ -265,7 +257,7 @@ data "aws_eks_cluster" "default" {
 }
 
 data "aws_secretsmanager_secret" "secrets" {
-  name = aws_secretsmanager_secret.db_password.name
+  arn = aws_secretsmanager_secret.db_password.id
 }
 
 data "aws_secretsmanager_secret_version" "secret" {
