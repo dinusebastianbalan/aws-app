@@ -253,4 +253,6 @@ module "eks_config" {
   source          = "./kubernetes-config"
   cluster_name    = var.cluster_name
   secret_arn      = aws_secretsmanager_secret.db_password.arn
+
+  depends_on = [ module.eks_managed_node_group ]
 }
