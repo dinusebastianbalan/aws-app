@@ -30,20 +30,20 @@ resource "local_file" "kubeconfig" {
   filename = "./kubeconfig-${var.cluster_name}"
 }
 
-resource "kubernetes_namespace" "nginx-ingress" {
+resource "kubernetes_namespace" "gateway" {
   metadata {
-    name = "nginx-ingress"
+    name = "gateway"
   }
 }
 
 resource "helm_release" "nginx_ingress" {
-  namespace = kubernetes_namespace.nginx-ingress.metadata.0.name
+  namespace = kubernetes_namespace.gateway.metadata.0.name
   wait      = true
   timeout   = 600
 
-  name = "ingress-nginx"
+  name = "gateway"
 
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
-  version    = "v3.30.0"
+  version    = "v4.3.0"
 }
