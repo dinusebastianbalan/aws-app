@@ -29,18 +29,18 @@ jobs:
         aws eks update-kubeconfig --region us-east-1 --name testcluster
         kubectl get namespace
 
-    # - name: helm install add repo and install csi
-    #   run: |
-    #     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-    #     chmod 700 get_helm.sh
-    #     ./get_helm.sh
-    #     helm version
-    #     helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
-    #     helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver  --set syncSecret.enabled=true --set enableSecretRotation=true
+    - name: helm install add repo and install csi
+      run: |
+        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        ./get_helm.sh
+        helm version
+        helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+        helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver  --set syncSecret.enabled=true --set enableSecretRotation=true
 
 
-    # - name: Kubectl install ascp
-    #   run: kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml
+    - name: Kubectl install ascp
+      run: kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml
 
     - name: eksctl install
       run: |
@@ -50,7 +50,7 @@ jobs:
         tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
         sudo mv /tmp/eksctl /usr/local/bin
         eksctl create iamserviceaccount \
-            --region=us-east-1 --name "sa-bday"  \
+            --region=us-east-1 --name "sa-bday-app"  \
             --cluster testcluster \
             --attach-policy-arn arn:aws:iam::075948657693:policy/Secret_DB-policy --approve \
             --override-existing-serviceaccounts
@@ -75,11 +75,11 @@ jobs:
 
     - name: create SecretProviderClass
       run: |
-        cat << EOF > nginx-deployment-spc-k8s-secrets.yaml
+        cat << EOF > spc-k8s-secrets.yaml
         apiVersion: secrets-store.csi.x-k8s.io/v1
         kind: SecretProviderClass
         metadata:
-          name: nginx-deployment-spc-k8s-secrets
+          name: spc-k8s-secrets
         spec:
           provider: aws
           parameters: 
@@ -100,5 +100,60 @@ jobs:
                 - objectName: dbpassword
                   key: db_password_01
         EOF
-        kubectl apply -f nginx-deployment-spc-k8s-secrets.yaml
+        kubectl apply -f spc-k8s-secrets.yaml
         kubectl get SecretProviderClass
+
+    - name: test Secrets
+      run: |
+        cat << EOF > spc-k8s-secrets.yaml
+        ---
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: spc-k8s-secrets
+          labels:
+            app: k8s-secrets
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: k8s-secrets
+          template:
+            metadata:
+              labels:
+                app: k8s-secrets
+            spec:
+              serviceAccountName: sa-bday-app
+              containers:
+              - name: spc-k8s-secrets
+                image: nginx
+                imagePullPolicy: IfNotPresent
+                ports:
+                  - containerPort: 80
+                volumeMounts:
+                  - name: secrets-store-inline
+                    mountPath: "/mnt/secrets"
+                    readOnly: true
+                env:
+                  - name: DB_USERNAME_01
+                    valueFrom:
+                      secretKeyRef:
+                        name: my-secret-01
+                        key: db_username_01
+                  - name: DB_PASSWORD_01
+                    valueFrom:
+                      secretKeyRef:
+                        name: my-secret-01
+                        key: db_password_01
+              volumes:
+                - name: secrets-store-inline
+                  csi:
+                    driver: secrets-store.csi.k8s.io
+                    readOnly: true
+                    volumeAttributes:
+                      secretProviderClass: spc-k8s-secrets
+        EOF
+        kubectl apply -f spc-k8s-secrets.yaml
+        export POD_NAME=$(kubectl get pods -l app=k8s-secrets -o jsonpath='{.items[].metadata.name}')
+        kubectl exec -it ${POD_NAME} -- cat /mnt/secrets/db_password-secret
+        kubectl delete deploy spc-k8s-secrets
