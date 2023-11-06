@@ -56,30 +56,6 @@ resource "helm_release" "nginx_ingress" {
   version    = "v4.3.0"
 }
 
-resource "helm_release" "csi-secrets-store" {
-  name       = "csi-secrets-store"
-  namespace = "kube-system"
-  repository = "https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts"
-  chart      = "secrets-store-csi-driver/secrets-store-csi-driver"
-
-  set {
-    name = "syncSecret.enabled"
-    value = "true"
-  }
-
-  set {
-    name = "enableSecretRotation"
-    value = "true"
-  }
-}
-
-resource "null_resource" "kubectl_aosc" {
-  provisioner "local-exec" {
-    command = "kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml --kubeconfig ./kubeconfig-${var.cluster_name}"
-    interpreter = ["/bin/bash", "-c"]
- }
-}
-
 resource "aws_iam_policy" "policy" {
   name        = "Secret_DB-policy"
   description = "SecretARN Policy"
