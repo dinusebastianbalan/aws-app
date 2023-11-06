@@ -39,3 +39,6 @@ jobs:
 
     - name: Get namespaces
       run: kubectl get namespace
+
+    - name: eksctl version
+      run: eksctl version
