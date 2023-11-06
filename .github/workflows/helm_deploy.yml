@@ -1,15 +1,11 @@
-name: 'Helm deploy'
+name: 'Provision csi driver'
 
 on:
-  pull_request:
-    branches: [ "main" ]
-    paths:
-    - 'infra/**'
   workflow_dispatch:
 
 jobs:
   terraform:
-    name: 'Helm deploy'
+    name: 'Provision csi driver'
     runs-on: ubuntu-latest
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
@@ -42,10 +38,19 @@ jobs:
         sudo mv /tmp/eksctl /usr/local/bin
         eksctl version
 
-    - name: helm install
+    - name: helm install add repo and install csi
       run: |
         curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
         chmod 700 get_helm.sh
         ./get_helm.sh
         helm version
-        helm ls -n gateway
+        helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+        helm install -n kube-system csi-secrets-store \
+          --set syncSecret.enabled=true \
+          --set enableSecretRotation=true \
+          secrets-store-csi-driver/secrets-store-csi-driver
+
+
+    - name: Kubectl install ascp
+      run: kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml
+
