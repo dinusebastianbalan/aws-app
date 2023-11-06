@@ -19,17 +19,29 @@ jobs:
 
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v1
+    - name: upgrade micrservices on DEV
+      uses: wahyd4/kubectl-helm-action@master
 
-    - name: Set up kubectl
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      run: |
-        echo "$KUBE_CONFIG_DATA" | base64 -d > kubeconfig.yaml
-        kubectl config view --flatten > ~/.kube/config
-        kubectl config use-context my-context
 
-    - name: Deploy to Kubernetes
-      run: |
-        kubectl get pods -n gateway
+name: 'Helm Deploy'
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+    - 'helm/**'
+  workflow_dispatch:
+
+jobs:
+  helm_upgrade_dev:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v1
+      - name: Helm deploy
+        uses: wahyd4/kubectl-helm-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: |
+            helm upgrade --install gateway -n gateway
