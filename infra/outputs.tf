@@ -34,6 +34,11 @@ output "azs" {
   value       = module.vpc.azs
 }
 
+output "cluster_name" {
+  description = "The name of the EKS cluster"
+  value       = module.eks.cluster_name
+}
+
 #Bastion
 
 ## ec2_bastion_instance_ids
@@ -46,4 +51,9 @@ output "ec2_bastion_instance_ids" {
 output "bastion_instance_eip" {
   description = "Elastic IP associated to the Bastion Host"
   value       = aws_eip.bastion_instance_eip.public_ip
+}
+
+
+output "kubeconfig" {
+  value = abspath("${path.root}/${local_file.kubeconfig.filename}")
 }
