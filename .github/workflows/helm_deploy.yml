@@ -1,11 +1,11 @@
-name: 'Provision csi driver'
+name: 'Provision Secret'
 
 on:
   workflow_dispatch:
 
 jobs:
   terraform:
-    name: 'Provision csi driver'
+    name: 'Provision secret'
     runs-on: ubuntu-latest
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
@@ -35,12 +35,12 @@ jobs:
         chmod 700 get_helm.sh
         ./get_helm.sh
         helm version
-#        helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
-#        helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver  --set syncSecret.enabled=true --set enableSecretRotation=true
+        helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+        helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver  --set syncSecret.enabled=true --set enableSecretRotation=true
 
 
-    # - name: Kubectl install ascp
-    #   run: kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml
+    - name: Kubectl install ascp
+      run: kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml
 
     - name: eksctl install
       run: |
@@ -91,12 +91,10 @@ jobs:
                     objectAlias: dbusername
                   - path: password
                     objectAlias: dbpassword
-          # Create k8s secret. It requires volume mount first in the pod and then sync.
           secretObjects:                
             - secretName: my-secret-01
               type: Opaque
               data:
-                #- objectName: <objectName> or <objectAlias> 
                 - objectName: dbusername
                   key: db_username_01
                 - objectName: dbpassword
