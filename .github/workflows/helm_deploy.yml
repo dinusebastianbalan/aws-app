@@ -25,20 +25,19 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
-    - name: Download Kubectl
-      run: curl -LO https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl
+    - name: Install Kubectl and get context
+      run: |
+        curl -LO https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+        kubectl version --client
+        aws eks update-kubeconfig --region us-east-1 --name testcluster
+        kubectl get namespace
 
-    - name: Install Kubectl
-      run: sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
-    - name: Verify Kubectl
-      run: kubectl version --client
-
-    - name: Get context
-      run: aws eks update-kubeconfig --region us-east-1 --name testcluster
-
-    - name: Get namespaces
-      run: kubectl get namespace
-
-    - name: eksctl version
-      run: eksctl version
+    - name: eksctl install
+      run: |
+        ARCH=amd64
+        PLATFORM=$(uname -s)_$ARCH
+        curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+        tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+        sudo mv /tmp/eksctl /usr/local/bin
+        eksctl version
