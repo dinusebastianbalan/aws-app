@@ -248,3 +248,8 @@ module "eks_managed_node_group" {
     Terraform   = "true"
   }
 }
+
+module "eks_config" {
+  source          = "./kubernetes-config"
+  cluster_name    = var.cluster_name
+}
