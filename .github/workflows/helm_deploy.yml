@@ -39,21 +39,21 @@ jobs:
         helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver  --set syncSecret.enabled=true --set enableSecretRotation=true
 
 
-    - name: Kubectl install ascp
-      run: kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml
+    # - name: Kubectl install ascp
+    #   run: kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml
 
-    - name: eksctl install
-      run: |
-        ARCH=amd64
-        PLATFORM=$(uname -s)_$ARCH
-        curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
-        tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
-        sudo mv /tmp/eksctl /usr/local/bin
-        eksctl create iamserviceaccount \
-            --region=us-east-1 --name "sa-apps"  \
-            --cluster testcluster \
-            --attach-policy-arn arn:aws:iam::075948657693:policy/Secret_DB-policy --approve \
-            --override-existing-serviceaccounts
+    # - name: eksctl install
+    #   run: |
+    #     ARCH=amd64
+    #     PLATFORM=$(uname -s)_$ARCH
+    #     curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+    #     tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+    #     sudo mv /tmp/eksctl /usr/local/bin
+    #     eksctl create iamserviceaccount \
+    #         --region=us-east-1 --name "sa-apps"  \
+    #         --cluster testcluster \
+    #         --attach-policy-arn arn:aws:iam::075948657693:policy/Secret_DB-policy --approve \
+    #         --override-existing-serviceaccounts
 
     - name: create SecretProviderClass
       run: |
@@ -70,7 +70,7 @@ jobs:
                 - objectName: "db_password-secret"
                   objectType: "secretsmanager"
         EOF
-        kubectl apply -f
+        kubectl apply -f spc.yaml
         kubectl get SecretProviderClass
 
     - name: create SecretProviderClass
@@ -102,5 +102,5 @@ jobs:
                 - objectName: dbpassword
                   key: db_password_01
         EOF
-        kubectl apply -f
+        kubectl apply -f nginx-deployment-spc-k8s-secrets.yaml
         kubectl get SecretProviderClass
