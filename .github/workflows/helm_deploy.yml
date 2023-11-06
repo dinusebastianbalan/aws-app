@@ -1,0 +1,35 @@
+name: 'Helm Deploy'
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+    - 'helm/**'
+  workflow_dispatch:
+
+jobs:
+  helm_deploy:
+    name: 'Helm upgrade'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up kubectl
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      run: |
+        echo "$KUBE_CONFIG_DATA" | base64 -d > kubeconfig.yaml
+        kubectl config view --flatten > ~/.kube/config
+        kubectl config use-context my-context
+
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl get pods -n gateway
