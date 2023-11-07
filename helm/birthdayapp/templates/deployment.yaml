@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: bday-app-sa
+      serviceAccountName: bday-svcaccount
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -81,7 +81,7 @@ spec:
           driver: secrets-store.csi.k8s.io
           readOnly: true
           volumeAttributes:
-            secretProviderClass: nginx-deployment-spc-k8s-secrets
+            secretProviderClass: spc-k8s-secrets
       #   {{- toYaml . | nindent 8 }}
       # {{- end }}
       # {{- with .Values.nodeSelector }}
