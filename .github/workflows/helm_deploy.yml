@@ -155,5 +155,6 @@ jobs:
         EOF
         kubectl apply -f spc-k8s-secrets.yaml
         export POD_NAME=$(kubectl get pods -l app=k8s-secrets -o jsonpath='{.items[].metadata.name}')
+        kubectl wait --for condition=Ready pod/${POD_NAME}
         kubectl exec -it ${POD_NAME} -- cat /mnt/secrets/db_password-secret
         kubectl delete deploy spc-k8s-secrets
