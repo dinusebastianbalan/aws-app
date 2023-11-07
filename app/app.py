@@ -51,7 +51,7 @@ def liveness():
     return "OK", 200
 
 # API to save/update user's name and date of birth
-@app.route('/api/user', methods=['POST', 'PUT'])
+@app.route('/hello', methods=['POST', 'PUT'])
 def save_update_user():
     data = request.get_json()
 
@@ -93,7 +93,7 @@ def save_update_user():
         return jsonify({'error': 'Failed to connect to the database'}), 500
 
 # New route to get user information by user_id 
-@app.route('/api/user/<int:user_id>', methods=['GET'])
+@app.route('/hello/<int:user_id>', methods=['GET'])
 def get_user_by_id(user_id):
     connection = connect_to_db()
     if connection:
@@ -118,7 +118,7 @@ def get_user_by_id(user_id):
         return jsonify({'error': 'Failed to connect to the database'}), 500
 
 
-@app.route('/api/user/age/<int:user_id>', methods=['GET'])
+@app.route('/hello/age/<int:user_id>', methods=['GET'])
 def calculate_user_age(user_id):
     connection = connect_to_db()
     if connection:

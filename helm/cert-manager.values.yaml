@@ -1,6 +1,0 @@
-securityContext:
-  enabled: "true"
-serviceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::075948657693:role/eksctl-testcluster-addon-iamserviceaccount-de-Role1-NdWTLAzLhsIj
-
