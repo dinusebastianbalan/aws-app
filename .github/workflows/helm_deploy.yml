@@ -29,18 +29,18 @@ jobs:
         aws eks update-kubeconfig --region us-east-1 --name testcluster
         kubectl get namespace
 
-    - name: helm install add repo and install csi
-      run: |
-        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-        chmod 700 get_helm.sh
-        ./get_helm.sh
-        helm version
-        helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
-        helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver  --set syncSecret.enabled=true --set enableSecretRotation=true
+    # - name: helm install add repo and install csi
+    #   run: |
+    #     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    #     chmod 700 get_helm.sh
+    #     ./get_helm.sh
+    #     helm version
+    #     helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+    #     helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver  --set syncSecret.enabled=true --set enableSecretRotation=true
 
 
-    - name: Kubectl install ascp
-      run: kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml
+    # - name: Kubectl install ascp
+    #   run: kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml
 
     - name: eksctl install
       run: |
