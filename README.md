@@ -2,10 +2,10 @@ User Information API
 This Python project implements a simple Flask-based RESTful API for managing user information, including their name and date of birth, with a PostgreSQL database as the backend. The API supports creating, updating, retrieving user information, and calculating the user's next birthday.
 
 Prerequisites
-Python 3.x
-Flask
-psycopg2
-PostgreSQL
+- Python 3.x
+- Flask
+- psycopg2
+- PostgreSQL
 
 
 Setup
