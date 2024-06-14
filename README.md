@@ -19,30 +19,34 @@ db_password: Database password
 Installation
 Clone the repository:
 
-bash
+```bash
 git clone <repository_url>
 cd <repository_directory>
+```
 
 Create a virtual environment and activate it:
 
-bash
+```bash
 python3 -m venv venv
 source venv/bin/activate
+```
 
 Install the required dependencies:
 
-bash
+```bash
 pip install -r requirements.txt
+```
+
 Database Setup
 The application will automatically create a users table if it does not exist. The table structure is as follows:
 
-sql
+```sql
 CREATE TABLE IF NOT EXISTS users (
     id serial PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL,
     dob DATE
 );
-
+```
 
 Running the Application
 To run the Flask application, execute the following command:
@@ -69,12 +73,13 @@ Description: Saves or updates a user's name and date of birth.
 
 Request Body:
 
-json
+```json
 {
     "user_id": 1,
     "name": "John Doe",
     "dob": "1990-01-01"
 }
+```
 
 Responses:
 
@@ -93,11 +98,12 @@ Description: Retrieves user information by user ID.
 
 Response:
 
-json
+```json
 
 {
     "dob": "1990-01-01"
 }
+```
 
 200 OK: User information retrieved successfully.
 404 Not Found: User not found.
@@ -112,11 +118,12 @@ Description: Calculates the number of days until the user's next birthday or wis
 
 Response:
 
-json
+```json
 
 {
     "message": "Hello, John Doe! Your birthday is in 30 day(s)"
 }
+```
 
 200 OK: User's next birthday calculated successfully.
 404 Not Found: User not found.
