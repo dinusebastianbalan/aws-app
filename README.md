@@ -12,10 +12,13 @@ Setup
 Environment Variables
 Ensure the following environment variables are set in your system to allow the application to connect to the PostgreSQL database:
 
+```bash
 db_endpoint: Database endpoint (hostname or IP address)
 db_name: Database name
 db_user: Database user
 db_password: Database password
+```
+
 Installation
 Clone the repository:
 
@@ -51,9 +54,9 @@ CREATE TABLE IF NOT EXISTS users (
 Running the Application
 To run the Flask application, execute the following command:
 
-bash
+```bash
 python app.py
-
+```
 
 The application will be accessible at http://0.0.0.0:5000.
 
