@@ -1,4 +1,5 @@
 User Information API
+
 This Python project implements a simple Flask-based RESTful API for managing user information, including their name and date of birth, with a PostgreSQL database as the backend. The API supports creating, updating, retrieving user information, and calculating the user's next birthday.
 
 Prerequisites
@@ -86,11 +87,11 @@ Request Body:
 
 Responses:
 
-200 OK: User information saved/updated successfully.
-400 Bad Request: User ID is required.
-404 Not Found: User does not exist (for PUT method).
-409 Conflict: User already exists (for POST method).
-500 Internal Server Error: Database connection or query error.
+- 200 OK: User information saved/updated successfully.
+- 400 Bad Request: User ID is required.
+- 404 Not Found: User does not exist (for PUT method).
+- 409 Conflict: User already exists (for POST method).
+- 500 Internal Server Error: Database connection or query error.
 
 3. Get User Information by ID
 Endpoint: /hello/<int:user_id>
@@ -108,9 +109,9 @@ Response:
 }
 ```
 
-200 OK: User information retrieved successfully.
-404 Not Found: User not found.
-500 Internal Server Error: Database connection or query error.
+- 200 OK: User information retrieved successfully.
+- 404 Not Found: User not found.
+- 500 Internal Server Error: Database connection or query error.
 
 4. Calculate User's Next Birthday
 Endpoint: /hello/age/<int:user_id>
@@ -128,9 +129,9 @@ Response:
 }
 ```
 
-200 OK: User's next birthday calculated successfully.
-404 Not Found: User not found.
-500 Internal Server Error: Database connection or query error.
+- 200 OK: User's next birthday calculated successfully.
+- 404 Not Found: User not found.
+- 500 Internal Server Error: Database connection or query error.
 
 Error Handling
 
