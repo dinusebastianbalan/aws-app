@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: ./.github/actions/setup-composite
       - id: foo
-        uses: dinusebastianbalan/aws-app@v1
+        uses: ./.github/actions/setup-composite
         with:
           who-to-greet: 'Mona the Octocat'
       - run: echo random-number "$RANDOM_NUMBER"
