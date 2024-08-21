@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     name: A job to say hello
     steps:
-      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-composite
       - id: foo
         uses: dinusebastianbalan/aws-app@v1
         with:
