@@ -5,7 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     name: A job to say hello
     steps:
-      - run: ls -la
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+      - run: ls -lR .github
         shell: bash
       - uses: ./.github/actions/setup-composite
       - id: foo
