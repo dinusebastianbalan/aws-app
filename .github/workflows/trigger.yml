@@ -2,14 +2,11 @@ name: Repository Dispatch Trigger
 
 on:
   repository_dispatch:
-    types: [custom-event]
+    types: [trigger-action]
 
 jobs:
   dispatch_job:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Run a script
-        run: echo "Repository Dispatch triggered!"
+        run: echo "Repository Dispatch Event triggered!"
