@@ -9,4 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Echo the message from client_payload
-        run: echo "Message: ${{ github.event.client_payload.message }}"
+        run: echo "Message:${{ github.event.client_payload.message }}"
