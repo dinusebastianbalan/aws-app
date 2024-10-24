@@ -5,8 +5,15 @@ on:
     types: [trigger-action]
 
 jobs:
-  dispatch_job:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Run a script
-        run: echo "Repository Dispatch Event triggered from branch!"
+      - name: Check branch from client payload
+        run: |
+          if [ "${{ github.event.client_payload.branch }}" != "test-trigger-feature" ]; then
+            echo "This workflow only runs on the main branch."
+            exit 1
+          fi
+      - name: Proceed with build
+        run: echo "Repository Dispatch Event Triggered on the test-trigger-feature branch"
