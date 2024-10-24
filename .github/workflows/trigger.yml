@@ -9,4 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run a script
-        run: echo "Repository Dispatch Event triggered!"
+        run: echo "Repository Dispatch Event triggered from branch!"
