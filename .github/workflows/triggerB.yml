@@ -1,0 +1,15 @@
+# .github/workflows/workflow-b.yml
+name: Workflow B
+
+on:
+  workflow_run:
+    workflows: ["Repository Dispatch Trigger"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run some task for Workflow B
+        run: echo "Workflow B is now running!"
