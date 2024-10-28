@@ -21,7 +21,7 @@ jobs:
   trigger_sequence:
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to trigger workflows
+      GITHUB_TOKEN: ${{ secrets.PAT }}  # Needed to trigger workflows
 
     steps:
       - name: Set Variables
