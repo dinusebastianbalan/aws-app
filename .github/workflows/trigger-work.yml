@@ -1,0 +1,61 @@
+# .github/workflows/trigger-sequence.yml
+name: Trigger Workflow Sequence
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment (dev, qa, stg)"
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - stg
+      tag:
+        description: "Tag to deploy"
+        required: true
+        type: string
+
+jobs:
+  trigger_sequence:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to trigger workflows
+
+    steps:
+      - name: Set Variables
+        id: vars
+        run: |
+          echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "tag=${{ github.event.inputs.tag }}" >> $GITHUB_ENV
+
+      - name: Trigger Build Cloud Run Workflow
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: "triggerB.yml",  # The file name of the Build Cloud Run workflow
+              ref: "main",
+              inputs: {
+                environment: process.env.environment,
+                tag: process.env.tag
+              }
+            });
+            console.log("Triggered Build Cloud Run workflow");
+
+      - name: Wait for Build Cloud Run Completion
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const runs = await github.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: "triggerB.yml",
+              branch: "main",
+              status: "completed"
+            });
+            if (!runs.data.workflow_runs.length) throw new Error("No completed runs for Build Cloud Run");
+            console.log("Build Cloud Run completed.");
