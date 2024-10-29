@@ -11,9 +11,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
-      - name: Display structure of downloaded files
-        run: ls -R
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: trigger.yml
       - name: Run some task for Workflow B
         run: |
           env=$(cat env.txt)
