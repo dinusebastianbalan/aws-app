@@ -18,7 +18,7 @@ jobs:
           workflow: trigger.yml
       - name: Run some task for Workflow B
         run: |
-          env=$(cat env.txt)
-          tag=$(cat tag.txt)
+          env=$(cat env/env.txt)
+          tag=$(cat tag/tag.txt)
           echo "Env: $env"
           echo "Tag: $tag"
