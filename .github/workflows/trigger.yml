@@ -15,5 +15,5 @@ jobs:
         run: |
           echo "The env is ${{ github.event.client_payload.env }}"
           echo "The tag is ${{ github.event.client_payload.tag }}"
-          echo "::set-output name=env::${{ github.event.client_payload.env }}"
-          echo "::set-output name=tag::${{ github.event.client_payload.tag }}"
+          echo "env=${{ github.event.client_payload.env }}" >> $GITHUB_ENV
+          echo "tag=${{ github.event.client_payload.tag }}" >> $GITHUB_ENV
