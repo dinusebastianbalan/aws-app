@@ -7,8 +7,13 @@ on:
 jobs:
   dispatch_job:
     runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.set_vars.outputs.env }}
+      tag: ${{ steps.set_vars.outputs.tag }}
     steps:
       - name: Echo the message from client_payload
         run: |
           echo "The env is ${{ github.event.client_payload.env }}"
           echo "The tag is ${{ github.event.client_payload.tag }}"
+          echo "::set-output name=env::${{ github.event.client_payload.env }}"
+          echo "::set-output name=tag::${{ github.event.client_payload.tag }}"
