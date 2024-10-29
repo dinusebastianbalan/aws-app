@@ -9,10 +9,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-lates
     steps:
+      - name: Download env artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: env
+      - name: Download tag artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: tag
       - name: Run some task for Workflow B
         run: |
-          echo "Workflow B is now running! echo $env and echo $tag"
-          echo "Environment: ${{ github.event.workflow_run.head_commit.message }}
-          echo "Tag: ${{ github.event.workflow_run.head_commit.message }}"
+          env=$(cat env.txt)
+          tag=$(cat tag.txt)
+          echo "Env: $env"
+          echo "Tag: $tag"
