@@ -7,13 +7,20 @@ on:
 jobs:
   dispatch_job:
     runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ steps.set_vars.outputs.env }}
-      tag: ${{ steps.set_vars.outputs.tag }}
     steps:
       - name: Echo the message from client_payload
         run: |
           echo "The env is ${{ github.event.client_payload.env }}"
           echo "The tag is ${{ github.event.client_payload.tag }}"
-          echo "env=${{ github.event.client_payload.env }}" >> $GITHUB_ENV
-          echo "tag=${{ github.event.client_payload.tag }}" >> $GITHUB_ENV
+          echo "env=${{ github.event.client_payload.env }}" > env.txt
+          echo "tag=${{ github.event.client_payload.tag }}" > tag.txt
+      - name: Upload environment artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: env
+          path: env.txt
+      - name: Upload tag artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tag
+          path: tag.txt
