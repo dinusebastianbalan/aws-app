@@ -12,4 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run some task for Workflow B
-        run: echo "Workflow B is now running! echo $environment and echo $tag"
+        run: |
+          echo "Workflow B is now running! echo $env and echo $tag"
+          echo "Environment: ${{ github.event.workflow_run.head_commit.message }}
+          echo "Tag: ${{ github.event.workflow_run.head_commit.message }}"
