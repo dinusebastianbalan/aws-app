@@ -11,14 +11,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Download env artifact
+      - name: Download env and tag artifact
         uses: actions/download-artifact@v4
-        with:
-          name: env
-      - name: Download tag artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: tag
       - name: Run some task for Workflow B
         run: |
           env=$(cat env.txt)
