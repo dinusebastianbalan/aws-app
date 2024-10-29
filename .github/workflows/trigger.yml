@@ -9,4 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Echo the message from client_payload
-        run: echo "The message is ${{ github.event.client_payload.message }}"
+        run: |
+          echo "The env is ${{ github.event.client_payload.env }}"
+          echo "The tag is ${{ github.event.client_payload.tag }}"
